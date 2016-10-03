@@ -1,0 +1,202 @@
+
+In this segment, we continue our brief excursion
+into machine learning, with a short look
+at hierarchical clustering.
+
+As you'll recall, clustering, like all machine learning,
+is an optimization problem.
+We have an objective function, and we have a constraint,
+and we try and minimize the objective function,
+subject to the constraint.
+And like most optimization problems,
+it's computationally nasty.
+So instead of actually solving it,
+we rely on a greedy approximation.
+We'll talk about two such approximations in this course,
+K-means and, today, hierarchical clustering.
+Hierarchical clustering is amazingly simple conceptually.
+We start by assigning each item to a cluster,
+so that if we have N items to start with,
+we have N clusters, each containing exactly one item.
+We then find the two clusters that
+are most similar to each other and merge them
+into a single cluster, so that we have one fewer cluster
+then we started with.
+So in the second stage, if you will,
+of hierarchical clustering, instead of N clusters,
+we have N minus 1 clusters.
+And we continue the process until all items are clustered
+into a single cluster of size N. Now as you think about this,
+it may seem kind of silly.
+We started with something really quite trivial,
+and we ended with something really quite trivial.
+If our goal was to get all the items into a single cluster,
+why on earth did we bother with this complicated stuff
+in the middle when we could have just jumped
+to lumping everything together?
+And the reason is, it's the stuff in the middle
+that we really care about.
+That's where all the interesting action is.
+We can see that looking at something called the dendogram.
+This dendogram depicts the process
+of using hierarchical clustering, or what's
+technically called hierarchical agglomerative
+clustering, since we agglomerate things,
+to cluster the months of the calendar year.
+And here, they are clustered based
+upon the average temperature in each month.
+If we look at the dendogram from the bottom up,
+we can look first at the lowest merge,
+here, and see that the two months with the closest
+temperature were January and February,
+the first two months of the year.
+And so the first thing I do is merge those two.
+Now I have 11 clusters.
+The next lowest element is here.
+And that says the two months what
+were the next closest were July and August.
+So they were merged.
+Now, I have a cluster with months one and two,
+a cluster with month seven and eight, and 10 clusters each
+containing a single month.
+In the next step, I decide that month 12, December,
+is closer to January and February
+than any other two clusters.
+And I get this cluster.
+
+So on and so forth until, up here, everything is combined.
+But as you can see, there's quite a lot
+of interest in the middle.
+For example, I can look at stage three,
+where I have three clusters.
+
+And here we have a cluster that looks
+a lot like winter, November through March.
+
+Here we have a cluster that looks a lot like summer, June
+through August.
+And then in the middle, here, we have a cluster
+that combines Spring and Fall.
+
+Well, there was something kind of subtle going on.
+When I combined months, it was easy.
+But what about clusters?
+How do you look at the distance between two clusters, each
+of which contains more than one month?
+We use something called linkage criteria.
+We'll look at three of them.
+They're quite simple.
+One is called single-linkage.
+And you could think of this as kind of the best case.
+We consider the distance between one cluster and another
+to be the shortest distance between any two elements.
+So in the months, we look at the months
+that were most similar to each other in the two clusters.
+
+Conversely, we can look at the worst case
+and find the greatest distance between any two elements.
+Or, you won't be stunned to find we could also
+look at the average case.
+And when we think of the average distance,
+we could use one of two things, the mean, or the median.
+Typically we use the median if we're worried about outliers.
+
+So we can look at a simple example.
+Let's look at a cluster containing the numbers one,
+two, and three, and compare it to a cluster containing
+the numbers four, five, and six.
+If we use single-linkage distance,
+we'll look at the distance from three to four,
+which will be one.
+If we want to look at complete linkage distance, the worst
+case, we'd look at the distance between one and six
+and say the distance is five.
+And finally, if you want to look at the average case,
+assuming my arithmetic is OK, I think
+the distance will be three.
+
+Now let's cluster a more interesting example.
+In this table, I have the distance
+between a few major cities in the US.
+So for example, by looking at this cell,
+we can see that the distance-- and this is
+the distance by air, not road-- between Boston's airport
+and New York's LaGuardia, in this case, is 206 miles.
+Now let's cluster them.
+The first step, of course, we have six cities,
+so we have six clusters, each containing one city.
+We then observe that Boston and New
+York are closer than any other pair.
+So we get that cluster.
+We then discover that Chicago is closer to Boston and New
+York than any other pair.
+So that gets combined.
+We then combine San Francisco and Seattle.
+And then it gets interesting.
+What do we do with Denver?
+And that will depend upon the linkage criteria we use.
+If we use single-linkage, we discover that Denver goes here,
+because it's relatively close to Chicago,
+even though it's pretty far from Boston.
+But if we use average linkage, we
+discover Denver goes here, because on average, it's
+closer to San Francisco and Seattle.
+
+This example is simple because the comparison between points,
+between cities, is single dimensional.
+We subtract one number from another.
+Let's look at an example where it's multi-dimensional,
+in this case, two dimensional.
+We have here a map of midtown Manhattan in New York City.
+And on the map, we have a bunch of tourist attractions.
+For example, Radio City Music Hall, Times Square,
+Rockefeller Center.
+Suppose we want to cluster the locations in this map
+so that we can tell which tourist
+attractions are near each other.
+The first thing we need to do is ask, how are we
+going to represent the location of an attraction.
+In midtown Manhattan, locations are typically
+represented by a pair of numbers, the street address,
+for example, 55th street, and the avenue, Fifth Avenue.
+So the Museum of Modern Art is at 55th and 5th.
+The United Nations is at 46th and 1st.
+So if you want to ask the distance between these two
+attractions, we'd want to know the distance between the vector
+55, 5 and the vector 46, 1.
+
+We look at this distance using something called the Minkowski
+Metric.
+This equation is a little bit formidable looking,
+but it's actually quite simple.
+And it's nice because it's general.
+It does not matter how many features we have.
+We can always use this.
+So we ask for the distance between vector one, x1,
+and vector, x2.
+
+The only rule we have is that each vector
+should be of the same length.
+So for k equals 1 to the length of the vectors,
+we look at each element and we subtract the k-th element
+of the second vector from the k-th element
+of the first vector.
+Take the absolute value and raise it to the power of p.
+We do this for every element in the vector,
+and then finally, we take the result
+to the power of 1 over p.
+It looks complicated, but it's pretty simple.
+And if you think about the special cases of p
+equals 1 and p equals 2, which are actually
+the cases we usually care about, it's really quite simple.
+
+P1 is the Manhattan distance.
+So that says, if we want to walk from the Museum of Modern Art
+or take a taxi to the UN, we have to take this kind of path,
+because we can't walk through buildings.
+So that's the so-called Manhattan distance.
+
+On the other hand, if we were a pigeon,
+we could cover the distance this way
+by flying over the buildings.
+And that's the Euclidean distance.
