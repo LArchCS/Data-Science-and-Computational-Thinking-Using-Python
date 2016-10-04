@@ -143,12 +143,3 @@ pylab.plot(pylab.polyval(coeff, range(numSteps)))
 
 
 pylab.show()
-
-
-
-
-
-
-
-
-
