@@ -36,7 +36,6 @@ def cloud(n, k):
 set1,set2,set3,set4 = None, None, None, None
 
 def kmeans(points, k=4):
-        
     def findClusters(points, c1, c2, c3, c4):
         # store points and their distances to 4 centers
         #   {point: [dis1, dis2, dis3, dis4],  ,  ,  }
